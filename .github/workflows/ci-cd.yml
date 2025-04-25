@@ -3,7 +3,7 @@ name: Construcción y despliegue de una aplicación MVC a Azure
 env:
   AZURE_WEBAPP_NAME: upt-awa-755  # Aqui va el nombre de su aplicación
   DOTNET_VERSION: '8'                     # la versión de .NET
-  GITHUB_ACTOR: 'brunoenr02'
+  github.actor: "brunoenr02"
 
 on:
   push:
@@ -24,13 +24,13 @@ jobs:
         uses: docker/login-action@v3
         with:
             registry: ghcr.io
-            username: ${{ env.GITHUB_ACTOR }}
-            password: ${{ secrets.GHCR_TOKEN }}
+            username: ${{github.actor}}
+            password: ${{secrets.GITHUB_TOKEN}}
 
       - name: 'Build Inventory Image'
         run: |
-            docker build . --tag ghcr.io/${{ env.GITHUB_ACTOR }}/shorten:${{github.sha}}
-            docker push ghcr.io/${{ env.GITHUB_ACTOR }}/shorten:${{github.sha}}
+            docker build . --tag ghcr.io/${{github.actor}}/shorten:${{github.sha}}
+            docker push ghcr.io/${{github.actor}}/shorten:${{github.sha}}
 
   deploy:
     permissions:
@@ -48,4 +48,4 @@ jobs:
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          images: ghcr.io/${{ env.GITHUB_ACTOR }}/shorten:${{github.sha}}
+          images: ghcr.io/${{github.actor}}/shorten:${{github.sha}}
