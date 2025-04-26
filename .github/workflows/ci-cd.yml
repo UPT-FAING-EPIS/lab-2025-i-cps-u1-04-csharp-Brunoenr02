@@ -1,8 +1,8 @@
 name: Construcción y despliegue de una aplicación MVC a Azure
 
 env:
-  AZURE_WEBAPP_NAME: upt-awa-755      # Cambia esto por el nombre real de tu Azure Web App
-  DOTNET_VERSION: '8'
+  AZURE_WEBAPP_NAME: upt-awa-755  # Aqui va el nombre de su aplicación
+  DOTNET_VERSION: '8'                     # la versión de .NET
 
 on:
   push:
@@ -11,32 +11,25 @@ on:
       - 'src/**'
       - '.github/workflows/**'
   workflow_dispatch:
-
 permissions:
   contents: read
   packages: write
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout del código
-        uses: actions/checkout@v4
-
-      - name: Login to GitHub Container Registry
+      - uses: actions/checkout@v4
+      - name: 'Login to GitHub Container Registry'
         uses: docker/login-action@v3
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GHCR_TOKEN }}
+            registry: ghcr.io
+            username: brunoenr02
+            password: ${{secrets.GHCR_TOKEN}}
 
-      - name: Build and Push Docker Image
+      - name: 'Build Inventory Image'
         run: |
-          USERNAME=${GITHUB_ACTOR,,}  # Convierte a minúsculas
-          IMAGE_NAME=ghcr.io/$USERNAME/shorten:${GITHUB_SHA}
-          echo "Construyendo imagen: $IMAGE_NAME"
-          docker build . --tag $IMAGE_NAME
-          docker push $IMAGE_NAME
+            docker build . --tag ghcr.io/brunoenr02/shorten:${{github.sha}}
+            docker push ghcr.io/brunoenr02/shorten:${{github.sha}}
 
   deploy:
     permissions:
@@ -54,4 +47,4 @@ jobs:
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          images: ghcr.io/brunoenr02/shorten:${{ github.sha }}
+          images: ghcr.io/brunoenr02/shorten:${{github.sha}}
