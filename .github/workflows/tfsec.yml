@@ -1,4 +1,4 @@
-name: TFSec Security Scan
+name: Terraform Security Check
 
 on:
   pull_request:
@@ -9,32 +9,24 @@ on:
       - main
 
 jobs:
-  tfs:
+  tfsec:
+    name: Run TFSec Security Scan
     runs-on: ubuntu-latest
 
     steps:
-      # Paso 1: Obtener el código del repositorio
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      # Paso 2: Configurar Terraform
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v1
-        with:
-          terraform_version: '1.4.5'
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.3.0
 
-      # Paso 3: Instalar TFSec
-      - name: Install TFSec
-        run: |
-          curl -sSL https://github.com/aquasecurity/tfsec/releases/download/v1.5.0/tfsec-linux-amd64 -o /usr/local/bin/tfsec
-          chmod +x /usr/local/bin/tfsec
+    - name: Install TFSec
+      run: |
+        curl -s https://github.com/aquasecurity/tfsec/releases/download/v1.1.0/tfsec-linux-amd64 -o /usr/local/bin/tfsec
+        chmod +x /usr/local/bin/tfsec
 
-      # Paso 4: Ejecutar el análisis de TFSec
-      - name: Run TFSec security scan
-        run: |
-          tfsec . --format json --out results.json
-          
-      # Paso 5: Mostrar los resultados del análisis
-      - name: Display TFSec results
-        run: |
-          cat results.json
+    - name: Run TFSec
+      run: |
+        tfsec . --format github-actions
