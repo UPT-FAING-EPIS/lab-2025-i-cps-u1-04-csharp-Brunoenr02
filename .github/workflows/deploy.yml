@@ -157,24 +157,22 @@ jobs:
             cd infra
             terraform apply -var="suscription_id=${{ secrets.SUSCRIPTION_ID }}" -var="sqladmin_username=${{ secrets.SQL_USER }}" -var="sqladmin_password=${{ secrets.SQL_PASS }}" -auto-approve main.tfplan
     
-  tfsec:
-    name: Run TFSec Security Scan
-    runs-on: ubuntu-latest
+      - name: Run tfsec Security Scan
+        runs-on: ubuntu-latest
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Set up Terraform
-      uses: hashicorp/setup-terraform@v2
-      with:
-        terraform_version: 1.3.0
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.3.0
 
-    - name: Install TFSec
-      run: |
-        curl -s https://github.com/aquasecurity/tfsec/releases/download/v1.1.0/tfsec-linux-amd64 -o /usr/local/bin/tfsec
-        chmod +x /usr/local/bin/tfsec
+      - name: Install TFSec
+        run: |
+          curl -s https://github.com/aquasecurity/tfsec/releases/download/v1.1.0/tfsec-linux-amd64 -o /usr/local/bin/tfsec
+          chmod +x /usr/local/bin/tfsec
 
-    - name: Run TFSec
-      run: |
-        tfsec . --format github-actions
+      - name: Run TFSec
+        run: |
+          tfsec . --format github-actions
