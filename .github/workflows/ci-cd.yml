@@ -24,7 +24,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-        dotnet-version: '${{ env.DOTNET_VERSION }}'
+        dotnet-version: '8'
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
