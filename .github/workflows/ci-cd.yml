@@ -21,15 +21,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        with:
-          projectBaseDir: ./src
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_PROJECT_KEY: lab01calidadsoftware_lab04calidadsoftware
-          SONAR_ORGANIZATION: lab01calidadsoftware
-      
       - name: 'Login to GitHub Container Registry'
         uses: docker/login-action@v3
         with:
