@@ -32,7 +32,7 @@ jobs:
       # Paso 4: Ejecutar el análisis de TFSec
       - name: Run TFSec security scan
         run: |
-          tfsec . --format github-actions --out results.json
+          tfsec . --format json --out results.json
           
       # Paso 5: Mostrar los resultados del análisis
       - name: Display TFSec results
